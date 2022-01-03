@@ -8,9 +8,24 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @StateObject private var photoListVM = PhotoListViewModel()
+    
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        NavigationView {
+            
+            List(photoListVM.photos) { photo in
+                HStack {
+                    URLImage(url: photo.thumbnailUrl)
+                    Text(photo.title)
+                }
+            }.task {
+                await photoListVM.populatePhotos()
+            }
+            
+            .navigationTitle("Photos")
+            
+        }
     }
 }
 
